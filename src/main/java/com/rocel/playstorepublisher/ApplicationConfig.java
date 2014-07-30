@@ -1,4 +1,4 @@
-package com.rocel.playstorepublisher.google;
+package com.rocel.playstorepublisher;
 
 /**
  * Contains global application configuration, which is required by all samples.
@@ -14,12 +14,12 @@ public final class ApplicationConfig {
      * {@code null} or blank, the application will log a warning. Suggested
      * format is "MyCompany-Application/1.0".
      */
-    static final String APPLICATION_NAME = "";
+    public static final String APPLICATION_NAME = "";
 
     /**
      * Specify the package name of the app.
      */
-    static final String PACKAGE_NAME = "";
+    public static final String PACKAGE_NAME = "";
 
     /**
      * Authentication.
@@ -32,7 +32,7 @@ public final class ApplicationConfig {
      * account email and add your key.p12 file to the resources directory.
      * </p>
      */
-    static final String SERVICE_ACCOUNT_EMAIL = "";
+    public static final String SERVICE_ACCOUNT_EMAIL = "";
 
     /**
      * Specify the apk file path of the apk to upload, i.e. /resources/your_apk.apk

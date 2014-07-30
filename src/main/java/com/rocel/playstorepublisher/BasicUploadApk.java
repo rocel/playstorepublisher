@@ -1,4 +1,4 @@
-package com.rocel.playstorepublisher.google;
+package com.rocel.playstorepublisher;
 
 import java.io.File;
 import java.io.IOException;

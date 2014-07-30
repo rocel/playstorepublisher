@@ -1,5 +1,13 @@
 package com.rocel.playstorepublisher;
 
+import com.google.api.client.http.AbstractInputStreamContent;
+import com.google.api.client.http.FileContent;
+import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.api.services.androidpublisher.AndroidPublisher;
+import com.google.api.services.androidpublisher.model.Apk;
+import com.google.api.services.androidpublisher.model.AppEdit;
+import com.google.api.services.androidpublisher.model.Track;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
@@ -12,7 +20,12 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
 import javax.servlet.ServletException;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayStorePublisherBuilder extends Builder {
     public static final String PLUGIN_NAME = "Play Store Publisher";
@@ -21,19 +34,73 @@ public class PlayStorePublisherBuilder extends Builder {
     private final String clientSecret;
     private final String apkPath;
     private final String stage;
+    private final String appName;
+    private final String packageName;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public PlayStorePublisherBuilder(String clientId, String clientSecret, String apkPath, String stage) {
+    public PlayStorePublisherBuilder(String clientId, String clientSecret, String apkPath, String stage, String appName, String packageName) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.apkPath = apkPath;
         this.stage = stage;
+        this.appName = appName;
+        this.packageName = packageName;
     }
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
         listener.getLogger().println("clientId, " + clientId + " - clientSecret :" + clientSecret + " - apkPath :" + apkPath + " - stage :" + stage);
+
+        try {
+            Preconditions.checkArgument(!Strings.isNullOrEmpty(packageName), "ApplicationConfig.PACKAGE_NAME cannot be null or empty!");
+
+            // Create the API service.
+            AndroidPublisher service = AndroidPublisherHelper.init(appName, ApplicationConfig.SERVICE_ACCOUNT_EMAIL);
+            final AndroidPublisher.Edits edits = service.edits();
+
+            // Create a new edit to make changes to your listing.
+            AndroidPublisher.Edits.Insert editRequest = edits.insert(packageName, null /** no content */);
+            AppEdit edit = editRequest.execute();
+            final String editId = edit.getId();
+            listener.getLogger().println(String.format("Created edit with id: %s", editId));
+
+            // Upload new apk to developer console
+            final String apkPath = BasicUploadApk.class
+                    .getResource(ApplicationConfig.APK_FILE_PATH)
+                    .toURI().getPath();
+
+            final AbstractInputStreamContent apkFile = new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, new File(apkPath));
+            AndroidPublisher.Edits.Apks.Upload uploadRequest = edits
+                    .apks()
+                    .upload(packageName,
+                            editId,
+                            apkFile);
+
+            Apk apk = uploadRequest.execute();
+            listener.getLogger().println(String.format("Version code %d has been uploaded",
+                    apk.getVersionCode()));
+
+            // Assign apk to alpha track.
+            List<Integer> apkVersionCodes = new ArrayList<Integer>();
+            apkVersionCodes.add(apk.getVersionCode());
+            AndroidPublisher.Edits.Tracks.Update updateTrackRequest = edits
+                    .tracks()
+                    .update(packageName,
+                            editId,
+                            stage,
+                            new Track().setVersionCodes(apkVersionCodes));
+            Track updatedTrack = updateTrackRequest.execute();
+            listener.getLogger().println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+
+            // Commit changes for edit.
+            AndroidPublisher.Edits.Commit commitRequest = edits.commit(packageName, editId);
+            AppEdit appEdit = commitRequest.execute();
+            listener.getLogger().println(String.format("App edit with id %s has been comitted", appEdit.getId()));
+
+        } catch (IOException | URISyntaxException | GeneralSecurityException ex) {
+            listener.getLogger().println("Excpetion was thrown while uploading apk to alpha track : " + ex.getLocalizedMessage());
+        }
         return true;
     }
 

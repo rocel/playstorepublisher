@@ -1,4 +1,4 @@
-package com.rocel.playstorepublisher.google;
+package com.rocel.playstorepublisher;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -41,7 +41,7 @@ public class AndroidPublisherHelper {
 
     private static final Log log = LogFactory.getLog(AndroidPublisherHelper.class);
 
-    static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
+    public static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
 
     /** Path to the private key file (only used for Service Account auth). */
     private static final String SRC_RESOURCES_KEY_P12 = "src/resources/key.p12";
