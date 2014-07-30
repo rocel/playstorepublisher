@@ -10,7 +10,7 @@
 
     <groupId>com.rocel</groupId>
     <artifactId>playstorepublisher</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>hpi</packaging>
 
     <licenses>
@@ -22,6 +22,15 @@
 
     <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
     <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <layout>default</layout>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>repo.jenkins-ci.org</id>
             <url>http://repo.jenkins-ci.org/public/</url>
@@ -35,14 +44,66 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <build>
+        <plugins>
+            <!-- we want JDK 1.7 source and binary compatiblility -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
-            <groupId>sample</groupId>
-            <artifactId>com.sample</artifactId>
-            <version>1.0</version>
+            <groupId>com.google</groupId>
+            <artifactId>api-services-androidpublisher</artifactId>
+            <version>2-rev20140710-1.19.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/yourJar.jar</systemPath>
+            <systemPath>${project.basedir}/libs/google-api-services-androidpublisher-v2-rev20140710-1.19.0.jar
+            </systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.google</groupId>
+            <artifactId>oauth-client-jetty</artifactId>
+            <version>1.19.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/google-oauth-client-jetty-1.19.0.jar
+            </systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.google</groupId>
+            <artifactId>oauth-client-java6</artifactId>
+            <version>1.19.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/google-oauth-client-java6-1.19.0.jar
+            </systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client</artifactId>
+            <version>1.19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.19.0</version>
         </dependency>
     </dependencies>
+
 
 </project>

@@ -6,4 +6,7 @@
   <f:entry title="Client Id" field="clientId">
     <f:textbox />
   </f:entry>
+  <f:entry title="APK Path" field="apkPath">
+    <f:textbox />
+  </f:entry>
 </j:jelly>
