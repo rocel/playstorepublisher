@@ -39,18 +39,14 @@ public class BasicUploadApk {
 
     public static void main(String[] args) {
         try {
-            Preconditions.checkArgument(!Strings.isNullOrEmpty(ApplicationConfig.PACKAGE_NAME),
-                    "ApplicationConfig.PACKAGE_NAME cannot be null or empty!");
+            Preconditions.checkArgument(!Strings.isNullOrEmpty(ApplicationConfig.PACKAGE_NAME), "ApplicationConfig.PACKAGE_NAME cannot be null or empty!");
 
             // Create the API service.
-            AndroidPublisher service = AndroidPublisherHelper.init(
-                    ApplicationConfig.APPLICATION_NAME, ApplicationConfig.SERVICE_ACCOUNT_EMAIL);
+            AndroidPublisher service = AndroidPublisherHelper.init(ApplicationConfig.APPLICATION_NAME, ApplicationConfig.SERVICE_ACCOUNT_EMAIL);
             final Edits edits = service.edits();
 
             // Create a new edit to make changes to your listing.
-            Insert editRequest = edits
-                    .insert(ApplicationConfig.PACKAGE_NAME,
-                            null /** no content */);
+            Insert editRequest = edits.insert(ApplicationConfig.PACKAGE_NAME, null /** no content */);
             AppEdit edit = editRequest.execute();
             final String editId = edit.getId();
             log.info(String.format("Created edit with id: %s", editId));
@@ -59,13 +55,14 @@ public class BasicUploadApk {
             final String apkPath = BasicUploadApk.class
                     .getResource(ApplicationConfig.APK_FILE_PATH)
                     .toURI().getPath();
-            final AbstractInputStreamContent apkFile =
-                    new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, new File(apkPath));
+
+            final AbstractInputStreamContent apkFile = new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, new File(apkPath));
             Upload uploadRequest = edits
                     .apks()
                     .upload(ApplicationConfig.PACKAGE_NAME,
                             editId,
                             apkFile);
+
             Apk apk = uploadRequest.execute();
             log.info(String.format("Version code %d has been uploaded",
                     apk.getVersionCode()));

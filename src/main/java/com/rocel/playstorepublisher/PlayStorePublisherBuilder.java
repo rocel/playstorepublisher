@@ -20,18 +20,20 @@ public class PlayStorePublisherBuilder extends Builder {
     private final String clientId;
     private final String clientSecret;
     private final String apkPath;
+    private final String stage;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public PlayStorePublisherBuilder(String clientId, String clientSecret, String apkPath) {
+    public PlayStorePublisherBuilder(String clientId, String clientSecret, String apkPath, String stage) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.apkPath = apkPath;
+        this.stage = stage;
     }
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
-        listener.getLogger().println("clientId, " + clientId + " - clientSecret :" + clientSecret + " - apkPath :" + apkPath);
+        listener.getLogger().println("clientId, " + clientId + " - clientSecret :" + clientSecret + " - apkPath :" + apkPath + " - stage :" + stage);
         return true;
     }
 

@@ -3,10 +3,21 @@
   <f:entry title="Client Secret" field="clientSecret">
     <f:textbox />
   </f:entry>
+
   <f:entry title="Client Id" field="clientId">
     <f:textbox />
   </f:entry>
+
   <f:entry title="APK Path" field="apkPath">
     <f:textbox />
   </f:entry>
+
+  <f:entry name="stage" title="APK Stage" field="stage">
+      <select name="stage">
+          <option value="prod">Production</option>
+          <option value="beta">Beta</option>
+          <option value="alpha">Alpha</option>
+      </select>
+  </f:entry>
+
 </j:jelly>
