@@ -14,12 +14,12 @@ public final class ApplicationConfig {
      * {@code null} or blank, the application will log a warning. Suggested
      * format is "MyCompany-Application/1.0".
      */
-    public static final String APPLICATION_NAME = "";
+    static final String APPLICATION_NAME = "";
 
     /**
      * Specify the package name of the app.
      */
-    public static final String PACKAGE_NAME = "";
+    static final String PACKAGE_NAME = "";
 
     /**
      * Authentication.
@@ -32,7 +32,7 @@ public final class ApplicationConfig {
      * account email and add your key.p12 file to the resources directory.
      * </p>
      */
-    public static final String SERVICE_ACCOUNT_EMAIL = "";
+    static final String SERVICE_ACCOUNT_EMAIL = "";
 
     /**
      * Specify the apk file path of the apk to upload, i.e. /resources/your_apk.apk
@@ -41,6 +41,6 @@ public final class ApplicationConfig {
      * samples.
      * </p>
      */
-    public static final String APK_FILE_PATH = "";
+    static final String APK_FILE_PATH = "";
 
 }
